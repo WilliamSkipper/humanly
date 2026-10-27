@@ -42,16 +42,24 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 
 ---
 
-## 2. Layout & Spatial Architecture
+## 2. Layout, Spatial Architecture & Element Sizing
+
+### Element Sizing, Scale & Touch Targets (Prevent "Crowded & Shrunken" UI)
+
+- Avoid undersizing interactive targets and text. Interfaces must not feel claustrophobic or tiny on desktop screens:
+  - Standard interactive controls (buttons, inputs, sidebar links) must have a minimum height of `40px` to `44px` (`h-10` to `h-11`).
+  - Table rows must have generous vertical padding (`py-3.5` to `py-4.5`), never squeezed down to cramped strips.
+  - Icons inside navigation bars, toolbars, and list rows should scale to at least `18px` to `20px` (`w-[18px] h-[18px]` or `w-5 h-5`), with clear `8px` to `12px` optical gaps from accompanying text.
+  - Primary text labels must sit at a comfortable `14px` (`text-sm`) to `16px` (`text-base`); metadata labels must not drop below `12px` (`text-xs`).
 
 ### Break "Card Syndrome"
 
 - Do not wrap every feature, paragraph, or stat into an identical rounded card.
 - Use diverse structural rhythm:
-- Asymmetric 2/3 and 1/3 splits.
-- Bordered data tables and key-value lists.
-- Hairline dividers (`1px solid rgba(255, 255, 255, 0.08)` or `border-zinc-200/80`) instead of floating box cards.
-- Alternating horizontal media-and-copy bands.
+  - Asymmetric 2/3 and 1/3 splits.
+  - Bordered data tables and key-value lists.
+  - Hairline dividers (`1px solid rgba(255, 255, 255, 0.08)` or `border-zinc-200/80`) instead of floating box cards.
+  - Alternating horizontal media-and-copy bands.
 
 ### Inset-Grouped Surfaces & Continuous Curvature
 
@@ -76,7 +84,20 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 
 ---
 
-## 3. Alerts, Banners & Global Notifications
+## 3. Mobile Responsiveness & Adaptive Ergonomics
+
+### Mobile-First Layout Architecture
+
+- Every desktop layout must cleanly degrade and adapt for mobile screens (`< 768px`):
+  - Sidebars: Must collapse into an accessible drawer sheet (sliding from the left or bottom) or a bottom navigation bar for core destination tabs.
+  - Tables to Adaptive Stacked Cards: Multi-column CSS grids (`minmax(...)`) that exceed the viewport width must either switch to an horizontal scroll container with sticky column anchors, or adapt into clean stacked list items displaying key-value pairs.
+  - Action Bars & Utilities: Top-right desktop utility rows (Import, Export, Lock, Profile) must collapse into an overflow menu (`...`) or a unified user sheet rather than wrapping haphazardly onto two lines.
+  - Touch Target Guardrail: On touch devices, every tap target must maintain a minimum bounding box of `44px × 44px` to comply with mobile accessibility standards (Apple HIG and WCAG).
+  - Floating Action Buttons / Bottom Anchors: On mobile, move primary creation actions (e.g., "New Credential", "Compose", "Add") to fixed bottom bars or sticky thumb zones where single-hand reach is easiest.
+
+---
+
+## 4. Alerts, Banners & Global Notifications
 
 ### Avoid Full-Width Floating Warning Strips
 
@@ -91,14 +112,14 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 
 ---
 
-## 4. Forms, Inputs & Browser Defaults
+## 5. Forms, Inputs & Browser Defaults
 
 ### Neutralize Autofill Color Hijacking
 
 - In dark themes, explicitly override the native WebKit autofill styling to eliminate light-yellow background hijacking (`#FEF9C3`):
   ```css
   input:-webkit-autofill,
-  input:-webkit-autofill:hover, 
+  input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
   input:-webkit-autofill:active {
     -webkit-text-fill-color: var(--text-primary, #f4f4f5) !important;
@@ -111,7 +132,7 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 
 ---
 
-## 5. Modals & Dialogs
+## 6. Modals & Dialogs
 
 ### Custom Modal Architecture (No Built-in Native Modals)
 
@@ -121,18 +142,22 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
   - Clear z-index layering, keyboard focus trap, and escape key listener.
   - Dedicated header, body, and action footer layout with hairline borders (`border-t border-zinc-800`).
   - Predictable, snappy entry/exit transitions (scale and opacity fade with ease-out timing).
+  - Mobile bottom sheets: On mobile viewports, modals should adapt to bottom-anchored slide-up sheets with drag affordances rather than tiny centered dialog boxes.
 
 ---
 
-## 6. Data Tables & List Views
+## 7. Data Tables & List Views
 
 ### Grid Alignment & Header Parity
 
 - Header columns must strictly match the layout grid of the data rows below them. Avoid grouping headers ambiguously across multiple distinct data points (e.g., do not label a column `Website & Actions` when action buttons sit on the opposite edge).
 - Use an explicit CSS Grid layout for both header and rows to keep columns locked in vertical alignment across all screen sizes:
+
   ```html
   <!-- Header -->
-  <div class="grid grid-cols-[minmax(240px,2fr)_minmax(180px,1.5fr)_minmax(200px,1.5fr)_80px] items-center px-4 py-2.5 text-xs font-mono uppercase tracking-wider text-zinc-500 border-b border-zinc-800">
+  <div
+    class="grid grid-cols-[minmax(240px,2fr)_minmax(180px,1.5fr)_minmax(200px,1.5fr)_80px] items-center px-4 py-3 text-xs font-mono uppercase tracking-wider text-zinc-500 border-b border-zinc-800"
+  >
     <div>Title / Identity</div>
     <div>Secret</div>
     <div>Website</div>
@@ -140,13 +165,16 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
   </div>
 
   <!-- Row -->
-  <div class="group grid grid-cols-[minmax(240px,2fr)_minmax(180px,1.5fr)_minmax(200px,1.5fr)_80px] items-center px-4 py-3 hover:bg-zinc-900/40 border-b border-zinc-800/60 transition-colors">
+  <div
+    class="group grid grid-cols-[minmax(240px,2fr)_minmax(180px,1.5fr)_minmax(200px,1.5fr)_80px] items-center px-4 py-3.5 hover:bg-zinc-900/40 border-b border-zinc-800/60 transition-colors"
+  >
     <div class="truncate">...</div>
     <div>...</div>
     <div>...</div>
     <div class="text-right">...</div>
   </div>
   ```
+
 - Right-align numeric columns and interactive action buttons; left-align text and labels.
 
 ### Density & Hairlines Over Card Fatigue
@@ -156,7 +184,7 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 
 ---
 
-## 7. Page Headings, Document Titles & Copywriting
+## 8. Page Headings, Document Titles & Copywriting
 
 ### Concise Page & Document Titles (`<title>` and Headings)
 
@@ -174,7 +202,7 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 
 ---
 
-## 8. Frontend Code Standards
+## 9. Frontend Code Standards
 
 - Include complete interactive states for all clickable elements: `:hover`, `:active`, and keyboard `:focus-visible` (e.g., `focus-visible:ring-2 focus-visible:ring-accent focus-visible:outline-none`).
 - Keep micro-interactions fast and snappy: transitions between 120ms and 200ms using ease-out timing curves.
