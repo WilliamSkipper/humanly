@@ -31,13 +31,34 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 - Light mode canvases should favor subtle bone or eggshell tones (`#F9F9FB`, `#F7F7F8`) over blinding pure white backgrounds.
 - Single Tint Discipline: Use strictly one accent tint across an entire screen or view, reserved exclusively for active interactive affordances (primary buttons, active tabs, toggle switches, disclosure indicators).
 
+### Strict Prohibition of Translucent Elements (Zero Translucency Mandate)
+
+- **Absolute Ban on Semi-Transparent Backgrounds:**
+  - All UI elements (cards, sidebars, headers, tables, inputs, buttons, pills, chips, badges, toolbars, callouts, and dropdowns) must use **100% solid, opaque backgrounds** (or `bg-transparent` where intentionally inheriting an opaque parent surface).
+  - Never use opacity slash modifiers on background colors (e.g., `bg-white/5`, `bg-zinc-900/50`, `bg-zinc-800/40`, `bg-emerald-500/10`, `bg-amber-500/20`, `bg-blue-600/15`).
+  - Never use `backdrop-blur-*` (`backdrop-blur-sm`, `backdrop-blur-md`, `backdrop-blur-xl`) or glassmorphism on UI surfaces. Frosted glass on headers, sidebars, cards, and pills is completely banned.
+  - Never use semi-transparent borders (e.g., `border-white/10`, `border-zinc-800/60`). Use explicit solid hex border tokens (e.g., `border-zinc-800` `#27272a`).
+- **Why Translucency Destroys UI Quality:**
+  - **Murky Visual Mud:** Semi-transparent colored fills (`bg-amber-500/10`, `bg-emerald-500/10`, `bg-blue-500/20`) blend into underlying dark backgrounds, turning clean layouts into muddy, low-contrast sludge.
+  - **The Generic AI Cliché:** Glassmorphic translucent cards, frosted headers, tinted glass pills, and glowing translucent callout strips are the single biggest dead giveaway of cheap AI mockups.
+  - **Accessibility & Contrast Failure:** Translucent layers destroy predictable text contrast (WCAG) whenever elements overlap or background content scrolls beneath them.
+- **What to Use Instead: Solid Layered Surfaces & Concrete Tokens:**
+  - Build elevation and hierarchy strictly through **solid, opaque surface layering**:
+    - Canvas / Base: Solid dark neutral (e.g., `bg-zinc-950` / `#09090b`).
+    - Panels & Sidebars: Solid elevated neutral (e.g., `bg-zinc-900` / `#18181b`).
+    - Cards & Containers: Solid surface (e.g., `bg-zinc-900` / `#18181b`) framed by solid 1px hairline border (`border-zinc-800` / `#27272a`).
+    - Inputs & Fields: Solid surface (e.g., `bg-zinc-950` or `bg-zinc-900`) with solid hairline border (`border-zinc-800`).
+    - Badges, Chips & Counters: Solid opaque neutrals (e.g., `bg-zinc-800 text-zinc-300 border border-zinc-700`).
+    - Active Nav / Tab Items: Solid accent fill (e.g., `bg-blue-600 text-white`) or high-contrast solid neutral (`bg-zinc-800 text-zinc-100`).
+    - Hover States: Solid color transitions (e.g., `hover:bg-zinc-800`), never opacity washes (`hover:bg-zinc-900/40`).
+
 ### Typography & Readability
 
 - Set body line measure strictly between 45 and 75 characters (`max-w-[65ch]` or `max-w-2xl`). Never allow body copy to stretch across wide viewports.
 - Pair an intentional display typeface (sharp sans, clean monospace, or editorial serif) for headings with a readable neutral text face for body copy.
 - Tighten heading tracking and leading (`tracking-tight leading-tight`), while giving body text comfortable line height (`leading-relaxed` or `1.6`).
 - Dual-Mode Optical Type Sizing: Use wider tracking and open counters on small text and metadata (sub-20px) to prevent muddiness, and tighter tracking on large display headers (20px+) for compact authority.
-- Build hierarchy through contrast of weight and font opacity (e.g., 100% white header vs. 60% white secondary copy), not by simply inflating font size.
+- Build hierarchy through contrast of weight and tone (e.g., crisp white header `text-zinc-100` vs. muted secondary copy `text-zinc-400` / `text-zinc-500`), not by simply inflating font size.
 - Use `text-wrap: balance` on multi-line headers and subtitles to eliminate orphan words and awkward line splits.
 
 ---
@@ -58,7 +79,7 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 - Use diverse structural rhythm:
   - Asymmetric 2/3 and 1/3 splits.
   - Bordered data tables and key-value lists.
-  - Hairline dividers (`1px solid rgba(255, 255, 255, 0.08)` or `border-zinc-200/80`) instead of floating box cards.
+  - Solid hairline dividers (`border-zinc-800` in dark mode, `border-zinc-200` in light mode) instead of floating box cards.
   - Alternating horizontal media-and-copy bands.
 
 ### Inset-Grouped Surfaces & Continuous Curvature
@@ -66,21 +87,31 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 - Inset-Grouped Surface Pattern: Group related list or setting items into structured rounded containers inset cleanly from outer edges, separated by hairline dividers that indent to match text baselines rather than cutting through leading icons.
 - Continuous Curvature (Squircles): Where supported or applicable in design tokens, favor continuous superellipse corner curves over abrupt circular fillets to prevent tangent seams and achieve clean, molded edges.
 
-### Elevation, Vibrancy & Borders
+### Elevation, Solid Surfaces & Borders
 
-- Replace heavy single-point drop shadows (`shadow-2xl`) with hairline borders and multi-layered diffused shadows.
+- Replace heavy single-point drop shadows (`shadow-2xl`) with solid hairline borders and multi-layered diffused shadows.
 - Avoid uniform aggressive corner rounding everywhere (e.g., do not slap `rounded-3xl` on buttons, inputs, cards, and containers alike). Use proportional rounding (smaller radius on buttons/inputs, medium on cards).
-- Dynamic Vibrancy and Translucent Layers: On frosted surfaces, use backdrop blurs paired with luminosity blend modes and variable opacity rather than flat, heavy tint blocks, allowing underlying layout color to filter through cleanly.
+- Zero Glassmorphism Mandate: Never use frosted glass (`backdrop-blur-*`), translucent background layers, or translucent borders on any component. Headers, navigation bars, sidebars, cards, and toolbars must sit on 100% solid, opaque surfaces.
 
 ### Proportional Sidebar & Target Sizing
 
 - Never undersize navigation items or utility buttons in desktop sidebars. Provide comfortable click targets (`h-10` or `py-2.5 px-3` with `text-sm`) and scaled bounding boxes for icons (e.g., `w-5 h-5` with `1.5px` stroke).
 - Dim or hide count badges when they equal 0 to reduce scanning clutter.
 
-### Status Indicators & Token Separation
+### Prohibition of Gratuitous Status Pills & Dramatic "ATTENTION" Badges
 
-- Keep dynamic system status (e.g., live state, connection pulses) visually separate from static technical specifications (e.g., cipher names, version tags).
-- Never place dynamic status indicators inside pills dedicated to static spec labels (e.g., separate `[● Ready]` from `[AES-256-GCM]`).
+- **Ban Gratuitous Top-Bar Status Pills (`• Ready`, `• Online`, `• Connected`):**
+  - Never place a persistent status pill (such as `• Ready`, `• Operational`, `• Active`, `• Online`, or `• Connected` with a glowing green dot or translucent outline) in the header, navigation bar, or corner utility row.
+  - A healthy, functioning application does not need to constantly advertise that it is "Ready". This is classic AI filler that wastes valuable horizontal space.
+  - Reserve status indicators strictly for active background operations (e.g., a quiet spinner for "Syncing...") or actual error/offline states.
+- **Ban High-Drama Translucent Badges (`ATTENTION`, `WARNING`, `CRITICAL`):**
+  - Never slap loud, all-caps pill badges like `[ATTENTION]`, `[WARNING]`, `[ALERT]`, or `[CRITICAL]` with glowing translucent fills (`bg-amber-500/10 text-amber-400 border-amber-500/30`) onto cards, widgets, or sidebars (e.g., `Security Audit [ATTENTION]`).
+  - This turns enterprise or productivity tools into noisy, arcade-like dashboards.
+  - Present status through calm, clean metrics and typography: let raw figures speak for themselves (e.g., `71 weak passwords`, `63 reused` in crisp neutral text) rather than screaming badges.
+- **Solid Badges & Count Capsules Only:**
+  - Category count badges (e.g., item count `93`) and status chips must use solid, opaque backgrounds (`bg-zinc-800 text-zinc-300 border border-zinc-700`), never translucent tinted capsules (`bg-blue-500/20`).
+- **Token Separation:**
+  - Keep dynamic operational states strictly separated from static technical specifications (e.g., never mix live connection state into technical tags like `AES-256-GCM`).
 
 ---
 
@@ -99,16 +130,20 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 
 ## 4. Alerts, Banners & Global Notifications
 
-### Avoid Full-Width Floating Warning Strips
+### Prohibition of Translucent Warning Strips & Tinted Alert Elements
 
-- Never insert full-width, single-line floating warning strips or alert bars directly above main tables or primary content views (e.g., a massive yellow/amber bordered box with a warning triangle on the left and an action button shoved to the far right).
-- Why this breaks good UI:
-  - Visual Severance: It creates an arbitrary horizontal barricade across the page that visually disconnects top navigation/search controls from the primary data below it.
-  - Saccadic Eye Strain: Forcing the user to read an alert message anchored to the far-left edge while shoving the call-to-action button to the opposite far-right margin creates an enormous gulf of dead space, requiring aggressive horizontal eye scanning.
-  - Saturated Color Pollution: Saturated alert borders (such as muddy amber `#D97706` or dark yellow) pollute a neutral slate palette and draw excessive visual weight away from the core workspace.
-- What to do instead:
-  - Group security, health, or warning summaries into a dedicated compact metric card, an integrated tab filter (e.g., an inline badge `Vulnerable (134)` next to `All Items`), or a dedicated non-modal drawer/toast.
-  - When inline banners are strictly required, keep them compact, group the text and the action button tightly together (`gap-x-4`), and maintain a bounded width rather than spanning full screen width.
+- **Never create translucent colored alert boxes or floating warning strips** using low-opacity color fills and colored borders (e.g., `bg-amber-500/10 border-amber-500/30`, `bg-yellow-500/10 border-yellow-500/20`, `bg-red-500/10`).
+- **Never insert floating warning strips directly under search bars or above main data views** (e.g., a translucent amber bar with a warning icon `⚠️ Security Audit: 71 weak password(s)...` floating between search inputs and table rows).
+- **Why this breaks good UI:**
+  - **Murky Visual Pollution:** Translucent colored washes over dark neutrals look muddy, cheap, and produce poor optical contrast.
+  - **The "AI Slop" Stamp:** Floating translucent amber/yellow callout strips are the most pervasive AI-generated dashboard cliché.
+  - **Visual Severance:** A horizontal colored strip cuts the page in two, severing top search and navigation controls from the primary table below.
+  - **Redundant Clutter:** Alerts frequently repeat data that is already displayed in sidebar widgets or health cards (e.g., redundantly restating weak/reused passwords in both the sidebar and a prominent banner).
+  - **Saccadic Eye Strain:** Forcing the user to read an alert message anchored to the far-left edge while shoving action buttons to the far-right margin creates an enormous gulf of dead space, requiring aggressive horizontal eye scanning.
+- **What to do instead:**
+  - **Eliminate Redundant Warning Strips:** If security health or issues are already displayed in a sidebar widget or category filter (e.g., a filter button `Vulnerable (134)`), do NOT duplicate it into a floating warning strip above the data.
+  - **Solid, Calm Surfaces When Alerts Are Essential:** When a critical notification or actionable system alert is strictly required, render it on a solid neutral surface with a clean hairline border (`border-zinc-800`), crisp monochrome or subtle icon, and tightly grouped inline actions (`gap-x-4`). Never use translucent neon or amber background washes.
+  - **Bounded Width:** Never let alerts span across full screen width; keep them bounded and compact.
 
 ---
 
@@ -138,7 +173,7 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 
 - Never use built-in browser dialogs (`window.alert()`, `window.confirm()`, unstyled HTML5 `<dialog>` defaults, or generic OS prompt boxes).
 - Always build custom modal and overlay components from scratch:
-  - Accessible backdrop scrim with soft blur (`bg-black/60 backdrop-blur-sm`).
+  - Accessible backdrop scrim: Dim background with fixed dark overlay (`bg-black/80`). The modal dialog container itself must be 100% solid and opaque (`bg-zinc-900 border border-zinc-800`), NEVER translucent glass or frosted blur.
   - Clear z-index layering, keyboard focus trap, and escape key listener.
   - Dedicated header, body, and action footer layout with hairline borders (`border-t border-zinc-800`).
   - Predictable, snappy entry/exit transitions (scale and opacity fade with ease-out timing).
@@ -166,7 +201,7 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 
   <!-- Row -->
   <div
-    class="group grid grid-cols-[minmax(240px,2fr)_minmax(180px,1.5fr)_minmax(200px,1.5fr)_80px] items-center px-4 py-3.5 hover:bg-zinc-900/40 border-b border-zinc-800/60 transition-colors"
+    class="group grid grid-cols-[minmax(240px,2fr)_minmax(180px,1.5fr)_minmax(200px,1.5fr)_80px] items-center px-4 py-3.5 hover:bg-zinc-900 border-b border-zinc-800 transition-colors"
   >
     <div class="truncate">...</div>
     <div>...</div>
@@ -179,7 +214,7 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 
 ### Density & Hairlines Over Card Fatigue
 
-- Avoid wrapping every table or list entry inside an isolated, floating rounded card. Use continuous bordered tables with subtle 1px hairline dividers (`border-b border-zinc-800/60`).
+- Avoid wrapping every table or list entry inside an isolated, floating rounded card. Use continuous bordered tables with subtle 1px hairline dividers (`border-b border-zinc-800`).
 - Conceal row action buttons (edit, delete) until row hover (`opacity-0 group-hover:opacity-100 transition-opacity`) to eliminate visual noise down long repetitive lists.
 
 ---
