@@ -17,6 +17,7 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 - Designing or authoring web pages, landing pages, dashboards, and UI components.
 - Reviewing or refactoring frontend styling to improve visual hierarchy and readability.
 - Selecting typography, spacing tokens, color palettes, and icon sets for web applications.
+- Ensuring full legal compliance with digital accessibility mandates (WCAG 2.2 AA, ADA Title III, European Accessibility Act, Section 508) and privacy regulations.
 
 ---
 
@@ -522,11 +523,95 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 
 ---
 
-## 10. Quantitative Framework: Machine-Made vs. Human-Made Website Authorship
+## 10. Legal Accessibility & Regulatory Compliance (WCAG 2.2 AA, ADA, EAA, GDPR)
+
+All frontend interfaces must be legally compliant with international accessibility mandates—including the **Americans with Disabilities Act (ADA Title III)**, **Section 508 of the Rehabilitation Act**, the **European Accessibility Act (EAA / Directive 2019/882 & EN 301 549)**, the **UK Equality Act 2010**, and **AODA**. Interfaces must strictly adhere to the **W3C Web Content Accessibility Guidelines (WCAG) 2.2 Level AA** standards.
+
+### 10.1 Perceivable (Sensory & Structural Clarity)
+
+- **Color Contrast Ratios (WCAG 1.4.3 & 1.4.11):**
+  - **Body & Normal Text (< 18pt / 24px regular, < 14pt / 18.5px bold):** Minimum contrast ratio of **4.5:1** against underlying surface.
+  - **Large Text (≥ 18pt / 24px regular or ≥ 14pt / 18.5px bold):** Minimum contrast ratio of **3:1**.
+  - **User Interface Components & Graphical Objects:** Minimum contrast ratio of **3:1** for active control boundaries, focus indicators, icons conveying meaning, and form field outlines against adjacent surfaces.
+- **Color Independence (WCAG 1.4.1):**
+  - Never convey status, error, warning, or state through color alone. Pair every colored status indicator with explicit text labels, semantic icons with text fallbacks, or distinct shapes.
+- **Non-Text Content & Meaningful Alt Text (WCAG 1.1.1):**
+  - Every informative image (`<img>`) must have accurate, concise, context-rich `alt` text describing the subject or purpose.
+  - Purely decorative images, background patterns, and cosmetic SVG flourishes must explicitly declare `alt=""` or `aria-hidden="true"`.
+  - Never generate redundant alt text like `alt="Image of a dashboard"` or raw file names `alt="screenshot_2026.png"`.
+- **Semantic Structure & Document Landmarks (WCAG 1.3.1):**
+  - Always structure the page with native HTML5 landmark elements: `<header>`, `<nav>`, `<main id="main-content">`, `<aside>`, and `<footer>`.
+  - Maintain a strict heading hierarchy (`<h1>` $\to$ `<h2>` $\to$ `<h3>`). Never skip heading levels for visual styling; style headings with utility classes, not fake tags.
+  - In data tables, use proper `<th>` headers with explicit `scope="col"` or `scope="row"`, and wrap table captions in `<caption>`.
+- **Document Language (WCAG 3.1.1):**
+  - Always specify the primary document language on the root element: `<html lang="en">` (or applicable ISO language code).
+- **Text Scaling & Fluid Zoom (WCAG 1.4.4 & 1.4.10):**
+  - Interfaces must support zooming up to **200%** without text clipping, horizontal content overlap, or loss of content or functionality.
+  - Use fluid typography and relative units (`rem`, `ch`, `%`) rather than rigid pixel-locked containers.
+
+### 10.2 Operable (Keyboard Navigation, Timing & Motor Control)
+
+- **Full Keyboard Navigation (WCAG 2.1.1 & 2.1.2):**
+  - Every interactive component (links, buttons, inputs, tabs, disclosure panels, modals, dropdown menus) must be completely accessible and operable via keyboard alone (`Tab`, `Shift+Tab`, `Enter`, `Space`, `Escape`, and arrow keys).
+  - Never introduce keyboard traps. Ensure users can navigate into, through, and out of every component using standard keys.
+  - Always close floating menus, drawers, and modal overlays with the `Escape` key and return keyboard focus to the triggering element.
+- **Uncompromising Focus Indicators (WCAG 2.4.7 & 2.4.13):**
+  - Never apply `outline: none` or `outline: 0` without immediately providing an explicit, high-contrast `:focus-visible` ring.
+  - Use high-contrast focus rings: `focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none focus-visible:ring-blue-500` with at least 3:1 contrast against both the control and background.
+- **Skip Navigation Link (WCAG 2.4.1):**
+  - Provide an accessible skip-to-content link as the very first focusable element inside `<body>`:
+    ```html
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-zinc-900 focus:text-zinc-100 focus:border focus:border-zinc-700 focus:rounded-md focus:shadow-lg"
+    >
+      Skip to main content
+    </a>
+    ```
+- **Touch Target & Pointer Gestures (WCAG 2.5.5 & 2.5.8):**
+  - Minimum touch bounding box of **44×44px** on mobile viewports (`min-h-[44px] min-w-[44px]`).
+  - Minimum pointer target area of **24×24px** on desktop, cushioned with sufficient negative margin or spacing to prevent accidental mis-clicks.
+- **Motion Restraint & Seizure Prevention (WCAG 2.2.2 & 2.3.1):**
+  - Always wrap non-essential CSS transitions, transforms, and animations in `@media (prefers-reduced-motion: reduce)`.
+  - Absolute ban on strobe, flashing, or rapid cycling animations faster than 3 flashes per second.
+  - Autoplaying videos or carousels must include accessible pause/stop controls.
+
+### 10.3 Understandable & Robust (Forms, States & Assistive Tech)
+
+- **Accessible Forms & Label Association (WCAG 3.3.1 & 3.3.2):**
+  - Every `<input>`, `<select>`, and `<textarea>` must have an explicit programmatically associated `<label>` using `for="input-id"` and `id="input-id"` (or explicit `aria-labelledby` / `aria-label`).
+  - Never rely on placeholders as labels. Placeholders disappear upon user typing and fail accessibility requirements.
+- **Error Identification & Recovery (WCAG 3.3.1, 3.3.3 & 4.1.3):**
+  - Validation errors must be explicitly identified in text, clearly describe the problem, and provide actionable instructions for correction.
+  - Mark invalid fields with `aria-invalid="true"` and associate error text using `aria-describedby="field-error-id"`.
+  - Dynamically rendered errors and status announcements must use `aria-live="polite"` or `role="alert"`.
+- **Native HTML Elements Over "Div Soup" (WCAG 4.1.2):**
+  - Always use semantic interactive elements: `<button>` for actions, `<a href="...">` for navigation, `<input>` for data entry, `<dialog>` for modal surfaces.
+  - Never attach `onClick` handlers to `<div>`, `<span>`, or `<li>` elements without native button semantics (`role="button" tabindex="0"` and keyboard event listeners for `Enter` and `Space`).
+- **Accessible Custom Dialogs & Drawers:**
+  - Custom modals must declare `role="dialog"`, `aria-modal="true"`, `aria-labelledby="dialog-title-id"`, and implement an active keyboard focus trap within the dialog surface.
+
+### 10.4 Regulatory Privacy & Legal Requirements (GDPR, CCPA/CPRA, Legal Footers)
+
+- **Zero Deceptive Dark Patterns:**
+  - Cookie and consent banners (when legally required under GDPR / ePrivacy) must present "Reject All" with equal visual hierarchy, contrast, and single-click ease as "Accept All".
+  - Never use pre-ticked checkboxes for marketing consent, newsletters, or tracking cookies.
+- **Essential Legal Infrastructure (Footer Requirements):**
+  - Every web application must provide persistent, accessible links in the global `<footer>` to:
+    - **Privacy Policy** (transparent data collection and processing disclosures)
+    - **Terms of Service** (usage terms and governing law)
+    - **Accessibility Statement** (conformance statement citing WCAG 2.2 AA and accessibility feedback contact)
+    - **Cookie Preferences / Settings** (where cookies or tracking are utilized)
+- **Zero "Patronizing Badge Slop":**
+  - Comply with all laws through clean architecture and genuine semantic HTML, not by slapping fake "100% ADA Certified!" or "GDPR Secured!" badges onto headers or forms.
+
+---
+
+## 11. Quantitative Framework: Machine-Made vs. Human-Made Website Authorship
 
 _(Adapted from "Machine-Made vs. Human-Made: A Quantitative Framework for the Perceived Authorship of Websites")_
 
-### 10.1 Core Theoretical Foundation: Mode Collapse & The Uncanny Valley of Web Design
+### 11.1 Core Theoretical Foundation: Mode Collapse & The Uncanny Valley of Web Design
 
 - **50ms Processing Fluency & Uncanny Valley:** Visitors judge page aesthetics in ~50ms (Lindgaard et al., 2006). Familiar stimuli feel fluent, but when prototypical choices sit on the exact mathematical mode of generated code, it triggers Mori's (1970) uncanny valley: a page that feels superficially polished but unauthored and synthetic.
 - **The Core Equation ($H_0$):**
@@ -534,7 +619,7 @@ _(Adapted from "Machine-Made vs. Human-Made: A Quantitative Framework for the Pe
   where conformity $C(x) = \exp\left( -\frac{\|x - \mu_{\text{AI}}\|^2}{2\sigma^2} \right)$ measures proximity to the generated centroid $\mu_{\text{AI}}$, and $S(x)$ measures specificity (bits of surprisal under a generic language model).
 - **Mode Collapse:** Generative models sample from the high-density mode of training data: Tailwind scales, shadcn/ui components, Inter font, Framer Motion fade-ups, and Linear/Vercel/Stripe templates. This shrinks design entropy below human practice: $H_{\text{gen}}(k) < H_{\text{hum}}(k)$.
 
-### 10.2 The 11 Quantitative Dimensions & Diagnostic Model
+### 11.2 The 11 Quantitative Dimensions & Diagnostic Model
 
 Model: $z = b + \sum_i w_i f_i$, with $P(\text{AI} \mid x) = \frac{1}{1 + e^{-z}}$.
 
@@ -556,7 +641,7 @@ Model: $z = b + \sum_i w_i f_i$, with $P(\text{AI} \mid x) = \frac{1}{1 + e^{-z}
 > **Specificity is the Single Strongest Separator ($w = -1.4$):**
 > A site containing concrete, falsifiable claims, real local facts, and idiosyncratic constraints is almost never perceived as AI-made—even if built with Tailwind and Inter. Adding superficial decorative doodles to a generic site raises perceived effort without lowering conformity.
 
-### 10.3 The Exhaustive Taxonomy of 86 AI Website Tells
+### 11.3 The Exhaustive Taxonomy of 86 AI Website Tells
 
 Weights: **Strong ($w = 3$)**, **Medium ($w = 2$)**, **Weak ($w = 1$)**.
 
@@ -638,7 +723,7 @@ Weights: **Strong ($w = 3$)**, **Medium ($w = 2$)**, **Weak ($w = 1$)**.
 58. **Dead Form & Button Handlers ($w = 1$):** `href="#"`, buttons with no `onClick`, forms logging to console without backend wiring.
 59. **Placeholder Data Left in Code ($w = 3$):** "Lorem ipsum", `john@example.com`, "123 Main Street", `(555) 123-4567`.
 60. **Missing Core Trust Pages ($w = 1$):** No real About page with real people, no legal privacy/terms, no designed 404 page.
-61. **Accessibility Shortcuts ($w = 1$):** `div onClick`, missing `:focus-visible`, tap targets $< 44\text{px}$, contrast failures.
+61. **Accessibility & Regulatory Violations ($w = 2$):** `div onClick`, missing `:focus-visible`, unlabelled form inputs, color contrast failures (< 4.5:1), missing `alt` attributes, or failure to meet WCAG 2.2 AA / ADA standards.
 62. **Cumulative Layout Shift & Unsized Images ($w = 1$):** `<img>` missing `width`/`height` attributes, 2MB hero PNGs ($CLS > 0.1$).
 63. **Heavy JavaScript Overhead ($w = 1$):** 500KB+ JS bundle for a static 5-section marketing landing page.
 64. **Desktop-Only Responsiveness ($w = 1$):** Headlines wrapping to 5 lines on mobile, horizontal overflow from background blobs.
@@ -670,7 +755,7 @@ Weights: **Strong ($w = 3$)**, **Medium ($w = 2$)**, **Weak ($w = 1$)**.
 85. **Low Named-Entity Density ($w = 1$):** Near-zero proper nouns, specific dates, real prices, physical addresses, or verified names.
 86. **Cross-Section Internal Contradictions ($w = 1$):** 14-day trial in pricing vs. 30-day trial in FAQ caused by uncoordinated section prompts.
 
-### 10.4 The 14 Counter-Signals of Human-Made Craft
+### 11.4 The 14 Counter-Signals of Human-Made Craft
 
 Active counter-signals lowering $P(\text{AI}) \to 0$:
 
@@ -689,7 +774,7 @@ Active counter-signals lowering $P(\text{AI}) \to 0$:
 13. **One Governing Metaphor:** Copy, color, iconography, and interactions all commit to a single coherent theme.
 14. **Honest Imperfection:** Organic edges arising from real functional constraints, rather than calculated decorative flourishes.
 
-### 10.5 Scoring Protocol & Practical Leverage Hierarchy
+### 11.5 Scoring Protocol & Practical Leverage Hierarchy
 
 #### Explicit Diagnostic Weight Breakdown
 
