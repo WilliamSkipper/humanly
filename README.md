@@ -6,4 +6,5 @@ Plugins and skills for AI agents (Gemini, Antigravity, Claude Code) to make outp
 
 - **`anti-slop-frontend-design`**: Clean, modern, professional web interfaces and frontend code without AI slop clichés.
 - **`anti-slop-presentations`**: High-impact, human-crafted presentations and slide decks (Google Slides, Keynote, PowerPoint, Marp) with scannable bullet points, editorial pacing, and zero card syndrome.
+- **`epitech-c-coding-style`**: Epitech C Coding Style (v7.1) rules combined with simple, student-friendly, non-over-engineered C code and natural variable naming.
 

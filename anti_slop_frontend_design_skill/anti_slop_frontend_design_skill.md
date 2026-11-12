@@ -63,6 +63,15 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 - **Dual-Mode Optical Sizing:** Wider tracking and open counters on small metadata (sub-20px); tighter tracking on large display headers (20px+) for compact authority.
 - **Hierarchy via Contrast:** Establish contrast through weight and tone (`text-zinc-100` vs. `text-zinc-400`/`text-zinc-500`), not merely inflating font size.
 - Apply `text-wrap: balance` on multi-line headings to eliminate orphan words.
+- **Ban the Universal Monospace Crutch & Number Monoculture:**
+  - Never default to the exact same monospaced font for numbers, statistics, dates, coordinates, and metrics across different projects. This cookie-cutter pattern destroys brand distinctiveness and signals generic AI assembly.
+  - Numbers and figures must inherit and harmonize with the project's primary domain typeface (e.g., using `font-variant-numeric: tabular-nums` or Tailwind's `tabular-nums` for tabular alignment). Monospace typography is strictly reserved for actual code snippets, command-line arguments, and terminal emulators—never as a decorative shortcut for "precision" or "industrial flair."
+
+### Elimination of Decorative Clutter, Faux-Telemetry & Space-Hogging Badges
+
+- **Absolute Ban on Non-Functional Pills, Badges & Faux-Telemetry:** Never place bordered tags, terminal-style chips (`[FACILITY HLL-04]`, `[SYS-READY]`), or fake telemetry strings (`GRID SYNC 50.02 HZ`) in headers, cards, or hero areas simply to look "technical" or "cool."
+- **Earn the Space or Delete It:** If an element cannot be clicked, filtered, or acted upon, and does not communicate critical real-time state change, delete it immediately. Never squander prime screen real estate, card crowns, or navigation bars on visual dead weight.
+- **No Decorative Status Dots or Floating Pings:** Never insert green/amber circular dots (`●`) next to static text, issue metadata, or metrics. Status dots are strictly for accessible, real-time binary state (live connection vs. offline), and must always be paired with explicit text for accessibility (WCAG 1.4.1).
 
 ---
 
@@ -426,7 +435,7 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 
 - Continuous bordered tables with subtle 1px hairline dividers (`border-b border-zinc-800`) over isolated floating cards.
 - Conceal row action buttons until hover (`opacity-0 group-hover:opacity-100 transition-opacity`) to eliminate visual clutter down long lists.
-- **Eradicate Table Row Badge Flooding:** Do NOT wrap every column value (status, role, environment, tier, region) in an individual square or pill badge box. Let clean text, monospace alignment, and subtle status dots carry meaning.
+- **Eradicate Table Row Badge Flooding & Faux Status Dots:** Do NOT wrap every column value (status, role, environment, tier, region) in an individual square or pill badge box, and do not repeat identical high-contrast ghost action buttons (`TRIP CLOSE`, `MANUAL CRACK`) across every row. Destructive actions must be clearly differentiated from routine settings. Use clean typography with tabular numbers (`tabular-nums`) matching the project typeface, reserving colored indicators strictly for real, changing, accessible state with explicit text.
 
 ---
 
@@ -436,7 +445,7 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 
 - Main root page title is strictly the brand name (`<title>Name</title>`). Sub-pages append only functional context: `Name Login`, `Name Register`, `Name Files`, `Name Settings`, `Name Dashboard`.
 - Avoid buzzword mad-libs ("Supercharge your workflow", "Empower your scale").
-- **Ban Floating Hero Announcement Pills & Header Badges:** Never place a floating pill badge or square category chip (`[ ✨ WHAT'S NEW ]`, `[ OVERVIEW ]`, `[ v2.0 RELEASE ]`) directly above the `<h1>` or section title. Let confident typography lead the page.
+- **Ban Floating Hero Announcement Pills, Header Badges & Decorative Kicker Bullets:** Never place a floating pill badge, square category chip (`[ ✨ WHAT'S NEW ]`, `[ OVERVIEW ]`, `[ v2.0 RELEASE ]`), or pseudo-status bullet (`● Issue No. 44 · Autumn 2026`) directly above the `<h1>` or section title. Let confident typography lead the page.
 - State product/tool function plainly in sentence 1. Display realistic UI artifacts (syntax-highlighted code, real tables, accurate keyboard shortcuts).
 
 ### Mandatory Head Metadata: Favicons, Apple Touch Icon & Open Graph Tags
@@ -668,6 +677,7 @@ Weights: **Strong ($w = 3$)**, **Medium ($w = 2$)**, **Weak ($w = 1$)**.
 16. **Generic Verbose Button Labels ($w = 1$):** "Get Started" and "Learn More" instead of outcome-oriented actions ("View 5-seat pricing", "Download CLI").
 17. **Uppercase Eyebrow Micro-Labels ($w = 1$):** `text-xs font-semibold uppercase tracking-wider text-indigo-600` above every section heading.
 18. **Emoji as Typography ($w = 1$):** Using `🚀`, `✨`, `🔒`, `⚡`, `🎯` in headings, lists, and badges.
+    18a. **Universal Monospace Number Monoculture ($w = 2$):** Forcing all numbers, dates, KPIs, coordinates, and metrics into the exact same generic monospace font across diverse projects as a lazy shortcut for "precision" or "data-driven" aesthetic.
 
 #### C. Layout & Structure (Tells 19–30)
 
@@ -689,6 +699,7 @@ Weights: **Strong ($w = 3$)**, **Medium ($w = 2$)**, **Weak ($w = 1$)**.
 31. **Stock shadcn/ui Neutral Look ($w = 1$):** Default zinc/slate Radix primitives with unmodified `--radius: 0.5rem` and 2px ring focus.
 32. **Tinted Rounded Square Icons ($w = 2$):** Lucide outline icon in `bg-indigo-100 text-indigo-600 p-3 rounded-lg` matching generic keywords (Zap, Shield, Rocket).
 33. **Pill Badge Above Headline ($w = 2$):** `rounded-full border px-3 py-1 text-sm` ("✨ New: v2.0 Released") with pulsing `animate-ping` dot.
+    33a. **Faux-Telemetry & Space-Hogging Clutter Badges ($w = 2$):** Bordered monospaced tags (`[FACILITY HLL-04]`, `[GRID SYNC 50.02 HZ]`, `[SYS-01]`) and non-interactive status pills crowding headers and card crowns to fake technical complexity.
 34. **Two-Button Hero ($w = 1$):** Equal-weight primary gradient button ("Get Started") + secondary outline button ("Learn More" / "Watch Demo").
 35. **Nudging Arrow Glyphs on Every CTA ($w = 1$):** "Get Started $\to$" with `group-hover:translate-x-1`.
 36. **Green Checkmark Lists ($w = 1$):** Lucide Check in emerald circle for every bullet, ending in "Everything in Pro, plus".
@@ -834,3 +845,149 @@ When refactoring or authoring a web application, apply remedies in strict order 
 5. **Ditch Stock & Abstract 3D Art ($w = +0.7$):** Replace generic blobs, fake browser mockups, and Unsplash stock with real screenshots and genuine photography.
 6. **Tune Typography & Spacing ($w = +0.6$):** Introduce custom modular scale ratios, distinct font weights, and proportional border radii.
 7. **Refine Motion & Geometry ($w = +0.4$):** Tailor transition curves to physical distance and respect reduced-motion.
+
+---
+
+## 12. Landing Page Architecture & Conversion Design (Landing Pages Only)
+
+> [!IMPORTANT]
+> **Strict Scope Isolation: Landing Pages Only**
+> This section applies exclusively when authoring or refactoring **standalone marketing landing pages** designed to drive a singular conversion action (lead capture, product sale, demo signup, waitlist). Do **not** apply these rules to application dashboards, documentation sites, internal tooling, account settings, or utility views, which require multi-destination navigation and exploratory workflows.
+
+### 12.1 The Core Strategic Philosophy: 1:1 Attention Ratio & Radical Focus
+
+A landing page is fundamentally different from a website homepage. While a homepage encourages ambient exploration, a landing page must drive exactly one predefined conversion goal.
+
+- **The 1:1 Attention Ratio Rule:** The ratio of interactive links to conversion goals must be exactly 1:1. Every extra exit link cuts conversion rates predictably.
+- **Strip Global Navigation & Escape Routes:**
+  - Remove full navigation headers (no "About Us", "Blog", "Docs", or "Features" nav links).
+  - Use a minimal, non-distracting header containing only the brand mark (linking to `#` or reloading the landing page) and an optional secondary high-contrast CTA button.
+  - Remove multi-column exploratory footer links. The landing page footer should be strictly utility-only: copyright, essential legal compliance links (Privacy Policy, Terms of Service, Accessibility Statement), and nothing else.
+- **Strict Message Match (The Ad-to-Page Bridge):**
+  - The page headline, vocabulary, and primary promise must verbatim mirror the intent and messaging of the referring ad, email campaign, or link.
+  - A visitor clicking an ad for _"Real-Time Database Migrations for Postgres"_ must see that exact phrase and outcome in the hero headline—never an abstracted corporate tagline like _"Empowering Next-Gen Data Pipelines"_.
+
+### 12.2 The 3-Second Hero Architecture (Above the Fold)
+
+Visitors judge relevance and decide whether to bounce in under 3 seconds. The above-the-fold hero section must instantly answer three questions without scrolling:
+
+1. **What is it?** (Clear product identity)
+2. **What is the tangible payoff for me?** (Concrete outcome, not fluffy adjectives)
+3. **What do I do next?** (Clear, unmistakable primary call-to-action)
+
+- **Headline Clarity Over Cleverness:**
+  - Never use vague corporate buzzwords ("Elevate", "Supercharge", "Unleash", "Next-gen").
+  - Lead with the specific, falsifiable outcome: incorporate real metrics, timeframes, or explicit pain relief (e.g., _"Automate client invoicing in 30 seconds and get paid 2x faster"_).
+  - Use `text-wrap: balance` to eliminate awkward line breaks and orphan words.
+- **The Primary CTA (High-Contrast Anchor):**
+  - Must be clearly visible above the fold on both desktop and mobile viewports.
+  - Use the single solid accent color of the page to guarantee highest optical contrast against the canvas.
+  - Action-oriented button copy with concrete payoff: replace passive commands like _"Submit"_ or _"Get Started"_ with low-friction commitments:
+    - _"Start 14-day free trial"_
+    - _"Download the free CLI"_
+    - _"Claim your migration audit"_
+- **De-Risking Microcopy Directly Below the CTA:**
+  - Place a single quiet, high-contrast line directly under the primary CTA button to address immediate hesitation:
+    ```html
+    <p class="mt-2.5 text-xs text-zinc-400">
+      No credit card required · 2-minute setup · Free forever tier
+    </p>
+    ```
+
+### 12.3 Complete Imagery & Visual Asset Standards
+
+Images on a landing page serve one primary job: **reducing cognitive load and proving claims visually.** Never treat images as cosmetic filler.
+
+#### The Golden Rule: Proof Over Decoration
+
+- **Absolute Prohibition of Staged Stock Photography:** Never use Unsplash/Getty photos of smiling office workers shaking hands, staring at laptops, or pointing at whiteboards. They trigger instant banner blindness and degrade perceived credibility.
+- **Absolute Prohibition of Generic 3D "AI Slop" & Shapes:** Never use floating pastel clay spheres, isometric purple blobs, synthetic particle ribbons, or generic Corporate Memphis illustrations. They communicate zero functional information about the product.
+- **Mandatory Real Product Imagery (Context of Use):**
+  - **SaaS / Web Tools:** Display the authentic UI in crisp resolution, populated with realistic, coherent sample data (never `Lorem ipsum`, `John Doe`, or `test@test.com`).
+  - **Physical Products:** Show the product in a real, authentic working environment used by the target demographic.
+  - **Services / Agencies:** Show tangible deliverables (a real audit excerpt, an actual before/after architectural schematic, or a real performance report).
+
+#### Eye-Tracking & Directional Gaze (The "Look Here" Effect)
+
+- **Directional Cueing:** Humans instinctively follow the eye gaze and gestures of other people. If human subjects are featured, their eyes or body angle must point directly toward the **headline or primary CTA button**, leading the visitor's focus toward conversion. Never use a person staring straight out at the viewer, which traps attention away from the copy.
+- **Visual Anchoring Without Distraction:** The visual asset must reinforce the value proposition without overpowering the text hierarchy. Visual hierarchy must flow: **Visual Anchor → Headline → Supporting Proposition → CTA Button**.
+- **Clean Framing & Grounding:**
+  - Ground software screenshots with a solid, subtle browser chrome bar (clean address bar, solid hairline border `border-zinc-800`), an authentic device bezel, or a subtle, multi-layered diffuse drop shadow.
+  - Avoid severe 3D perspective tilts (`rotateX(25deg) rotateY(-15deg)`) that distort typography and make actual UI unreadable.
+
+#### Micro-Demos Over Bloated GIFs
+
+- **Short Looping Micro-Videos (3–8s):** For interactive software workflows, static screenshots often fail to convey speed. Use lightweight, autoplaying, muted, looping `<video>` elements (WebM and MP4/H.265) demonstrating a single crisp action and its immediate output.
+- **Ban Heavy Animated GIFs:** A 6-second animated GIF routinely exceeds 15MB–25MB, decimating page performance. The identical clip encoded as WebM/MP4 is typically under 400KB with higher color fidelity and zero banding.
+  ```html
+  <video
+    autoplay
+    loop
+    muted
+    playsinline
+    preload="metadata"
+    class="w-full rounded-lg border border-zinc-800 shadow-2xl"
+  >
+    <source src="/demo.webm" type="video/webm" />
+    <source src="/demo.mp4" type="video/mp4" />
+  </video>
+  ```
+
+#### Unified Social Proof Visuals
+
+- **Monochrome Partner/Client Logos:** Unify all customer or press logos into a single grayscale/monochrome tone (`filter: grayscale(100%) opacity(0.6)` on hover transitioning to `opacity(0.9)`). A collage of jarring, multi-colored brand logos turns the landing page into a cheap billboard.
+- **Verifiable Customer Avatars:** Use real, authentic headshots of actual clients with verifiable names, companies, and roles. Never use AI-generated face avatars (pravatar, thispersondoesnotexist) or stock headshots.
+
+#### Technical Image Optimization & Core Web Vitals
+
+- **Modern Next-Gen Formats:** Serve all static raster imagery exclusively in **WebP** or **AVIF** for optimal compression.
+- **Zero-Shift Dimensions (CLS Protection):** Always provide explicit `width` and `height` attributes (or CSS `aspect-ratio`) on every `<img>` tag to guarantee zero layout shifts during page loading.
+- **Prioritize Hero Image (LCP Optimization):**
+  - The hero image is almost always the Largest Contentful Paint (LCP) element.
+  - **Never lazy-load the hero image.**
+  - Assign `fetchpriority="high"` and preload it in `<head>`:
+    ```html
+    <link
+      rel="preload"
+      as="image"
+      href="/hero.webp"
+      fetchpriority="high"
+      type="image/webp"
+    />
+    ```
+- **Lazy-Load Below-the-Fold Imagery:** Add `loading="lazy"` and `decoding="async"` to all images and video assets below the initial viewport.
+- **Responsive Srcsets:** Deliver tailored resolutions via `srcset` and `sizes` to prevent mobile devices over mobile networks from downloading 3000px desktop assets.
+
+### 12.4 Persuasive Narrative Flow & Section Rhythms
+
+Break the generic canonical SaaS template (`Hero → 3 Cards → Stats → Pricing → Footer`) by structuring the page around the user's natural decision psychology:
+
+1. **The Hero (Promise & Immediate Action):** Clear proposition, verified proof snapshot, and primary CTA.
+2. **Contextual Validation (Trust Anchors):** Monochromatic client logos or real-time usage numbers directly below the fold.
+3. **The Problem & Friction:** Concrete, relatable articulation of the acute pain point. Proving you understand their friction builds more trust than boasting about features.
+4. **The Solution & Mechanism:** How the product solves the friction. Break "Card Syndrome" by utilizing asymmetric 2/3 and 1/3 splits, interactive code/data comparisons, or alternating media bands rather than uniform 3-card grids.
+5. **Concrete Feature-to-Outcome Translations:**
+   - Translate every feature into a quantified outcome:
+     - _Slop:_ "Automated cloud backup: Back up your files to AWS effortlessly."
+     - _High-Craft:_ "Continuous 60-Second Snapshots: Roll back any corrupted database table in one click without downtime."
+6. **Deep Social Proof & Case Evidence:**
+   - Position testimonials near points of friction (beside forms and secondary CTAs), not quarantined at the bottom.
+   - Pair every testimonial with specific numbers (e.g., _"Cut our Docker build times from 18 minutes to 4 minutes"_).
+7. **Objection Handling (Targeted FAQ):**
+   - Address genuine purchase objections (data migration, compliance, cancellation terms, contract lock-in), not fabricated cheerleader questions like _"Why is this tool so amazing?"_.
+8. **Final Risk-Reversed CTA:**
+   - A focused closing section providing one last clear opportunity to convert, reiterating risk reversals (guarantee, setup time, trial period).
+
+### 12.5 Friction Reduction & Form Ergonomics
+
+Forms are the ultimate hurdle between interest and conversion:
+
+- **Aggressive Form Pruning:** Cut form fields to the absolute minimum required to initiate the relationship.
+  - If you only need their email to start an onboarding flow, ask **only** for their email. Every additional field (Phone Number, Company Size, Job Title) drops conversion rates by measurable percentages.
+- **Progressive Disclosure for Complex Onboarding:**
+  - If comprehensive user data is strictly required, use an interactive multi-step wizard with a clear step counter (`Step 1 of 3`).
+  - Keep Step 1 trivial (e.g., a single radio selection or email) to establish cognitive momentum.
+- **Prevent Form Hijacking & Auto-Zoom:**
+  - Ensure mobile input fields enforce `font-size >= 16px` to prevent iOS Safari auto-zoom.
+  - Add `autocapitalize="none" autocorrect="off" spellcheck="false"` on email, username, and technical inputs.
+- **Inline Validation Over Post-Submission Reloads:** Validate field constraints (format, availability) client-side in real time as the user leaves the field, with clear inline error text and `aria-describedby` associations.
