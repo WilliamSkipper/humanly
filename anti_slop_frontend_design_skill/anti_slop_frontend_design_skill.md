@@ -55,6 +55,25 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
   - Active Nav / Tab Items: Solid accent (`bg-blue-600 text-white`) or solid high-contrast neutral (`bg-zinc-800 text-zinc-100`).
   - Hover States: Solid transitions (`hover:bg-zinc-800`), never opacity washes (`hover:bg-zinc-900/40`).
 
+### Mandatory Hero Visual Atmosphere: Decorative Background Imagery (No Sterile Voids)
+
+- **The Hardcoded Requirement: The Hero Section MUST Feature Decorative Background Imagery.**
+  - The hero section (the top viewport of the site featuring the primary title and headline) must **NEVER** be left as an empty, sterile void of plain text floating against a flat, untextured `#09090b` canvas.
+  - Every hero must incorporate one or more atmospheric decorative background images (`<img>`, `<picture>`, or CSS `background-image`) that visually ground the product, concept, or domain.
+- **Why This Is Mandatory:**
+  - An empty dark void with floating text looks like an unfinished wireframe, a debug console, or a robotic text dump.
+  - Authentic human craft uses imagery to establish physical texture, spatial depth, and emotional tone before the visitor even begins reading.
+- **Permitted & Encouraged Background Imagery Archetypes:**
+  - **Authentic Architectural & Structural Photography:** Monolithic concrete, brutalist geometries, industrial steel, vaulted timber, minimalist gallery interiors.
+  - **Domain-Specific Hardware & Subject Matter:** Precision mechanical escapements, optical prisms, telescope mirrors, laboratory apparatus, cartographic engravings, audio synthesizer racks, circuit topologies.
+  - **Tactile Material Textures & Plates:** Fine carbon weave, dark brushed titanium, volcanic basalt, raw linen, matte slate, archival linocut textures, subtle analog film grain plates.
+  - **Technical Schematics & Coordinate Drawings:** SVG patent blueprints, topographical contour plates, star ephemerides, or geometric coordinate grids.
+- **Strict Anti-Slop Implementation Rules (Protecting Text Contrast & Performance):**
+  1. **Background Layering:** The decorative image sits in an absolute layer behind all content (`absolute inset-0 w-full h-full object-cover -z-10 pointer-events-none select-none`).
+  2. **High-Contrast Vignette Overlay:** Tame the background image with a subtle opacity (`opacity-20` to `opacity-40`) and a dark gradient/vignette mask (`bg-gradient-to-b from-transparent via-zinc-950/70 to-zinc-950` or solid radial vignette) so that headline typography achieves an uncompromising contrast ratio ($\ge 7:1$) against the backdrop.
+  3. **Zero Screen Reader Clutter:** Always add `aria-hidden="true"` and `alt=""` so screen readers skip decorative background assets.
+  4. **LCP Performance:** Preload the hero background asset in `<head>` using `<link rel="preload" as="image" href="..." fetchpriority="high">` to guarantee instant Largest Contentful Paint (LCP) with zero layout shift.
+
 ### Typography & Readability
 
 - **Body Measure:** Set line length strictly between 45 and 75 characters (`max-w-[65ch]` or `max-w-2xl`). Never allow body copy to stretch full-width.
@@ -67,11 +86,18 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
   - Never default to the exact same monospaced font for numbers, statistics, dates, coordinates, and metrics across different projects. This cookie-cutter pattern destroys brand distinctiveness and signals generic AI assembly.
   - Numbers and figures must inherit and harmonize with the project's primary domain typeface (e.g., using `font-variant-numeric: tabular-nums` or Tailwind's `tabular-nums` for tabular alignment). Monospace typography is strictly reserved for actual code snippets, command-line arguments, and terminal emulators—never as a decorative shortcut for "precision" or "industrial flair."
 
-### Elimination of Decorative Clutter, Faux-Telemetry & Space-Hogging Badges
+### Absolute Ban on Decorative Circular Dots, Faux-Telemetry & Pill Clutter
 
-- **Absolute Ban on Non-Functional Pills, Badges & Faux-Telemetry:** Never place bordered tags, terminal-style chips (`[FACILITY HLL-04]`, `[SYS-READY]`), or fake telemetry strings (`GRID SYNC 50.02 HZ`) in headers, cards, or hero areas simply to look "technical" or "cool."
+- **ZERO Decorative Circular Dots Anywhere on the Page (Strictly Enforced):**
+  - **NEVER place a circular dot (`●`, `rounded-full`, `border-radius: 50%`, `brand-dot`, `hero-status-dot`, SVG `<circle>`) next to a brand name, site title, logo, header text, or navigation bar.** A brand mark or product title does not need a green/blue circular dot beside it. (e.g., BANNED: `<span class="brand-dot"></span> ANTI-SLOP`).
+  - **NEVER place a circular dot next to an eyebrow label, hero kicker, category header, or sub-headline.** Static text must stand on confident typography alone—never prefixed with pseudo-status dots. (e.g., BANNED: `<span class="hero-status-dot"></span> TEN COMPLETE BROWSER APPLICATIONS`).
+  - **NEVER place decorative colored dots next to static cards, metrics, table rows, or list items.**
+  - **NEVER generate decorative macOS window traffic-light dots** (the 3 red/yellow/green circles) on card headers or fake browser mockups.
+  - Communicating state or metadata must rely **100% on pure typography** (font weight, color, subtle uppercase tracking, or typographic delimiters like middots `·`), NEVER prefixed or suffixed with circular colored dots.
+- **Absolute Ban on Non-Functional Pills, Badges & Faux-Telemetry:**
+  - Never wrap static labels, tags, or kickers in `rounded-full` capsule pills (`px-3 py-1 text-xs rounded-full`).
+  - Never place bordered tags, terminal-style chips (`[FACILITY HLL-04]`, `[SYS-READY]`), or fake telemetry strings (`GRID SYNC 50.02 HZ`) in headers, cards, or hero areas simply to look "technical" or "cool."
 - **Earn the Space or Delete It:** If an element cannot be clicked, filtered, or acted upon, and does not communicate critical real-time state change, delete it immediately. Never squander prime screen real estate, card crowns, or navigation bars on visual dead weight.
-- **No Decorative Status Dots or Floating Pings:** Never insert green/amber circular dots (`●`) next to static text, issue metadata, or metrics. Status dots are strictly for accessible, real-time binary state (live connection vs. offline), and must always be paired with explicit text for accessibility (WCAG 1.4.1).
 
 ---
 
@@ -104,65 +130,205 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 - Avoid uniform aggressive corner rounding everywhere (e.g., do not slap `rounded-3xl` on buttons, inputs, and cards alike). Use proportional rounding (smaller radius on buttons/inputs, medium on cards).
 - Never undersize sidebar navigation items. Provide comfortable click targets (`h-10` or `py-2.5 px-3`, `text-sm`) and scaled icon bounding boxes (`w-5 h-5` with 1.5px stroke). Dim or hide count badges when 0.
 
-### Strict Restraint on Badges & Pills (Stop Boxing Elements into Individual Squares or Pills)
+### Intentional Button Geometry & Shape Selection (Eradicating the Monotonous Rectangle Default)
 
-- **The Problem ("Badge Proliferation"):** AI models compulsively wrap every status, category, tag, role, date, tier, or metadata item inside its own boxed container (whether a pill `rounded-full`, a rounded rectangle `rounded-md`, or a sharp square chip). Every unnecessary badge creates four visual borders and a background patch, cluttering the canvas into a mosaic of postage stamps.
-- **The Core Rule: Unless Strictly Needed, Zero Boxed Badges (Pills or Squares).** Default to **quiet typography** and **natural text flow**.
+- **The Problem ("The Rectangle Monoculture"):** AI models compulsively output the exact same default rounded-rectangle button (`rounded-md` or `rounded-lg` with `px-4 py-2`) across every project. Whether building an industrial telemetry terminal, a luxury editorial lookbook, an audio synthesizer, a mobile utility app, or a playful consumer product, everything gets plastered with identical generic rectangles. This lack of intentionality is an immediate tell of machine generation.
+- **The Core Rule: Match Button Geometry to Domain Archetype and Mechanical Metaphor.** Button shapes must be chosen intentionally from three distinct geometric systems:
+  1. **Sharp Square & Rectangular Buttons** (`rounded-none` / 0px radius, or sharp `rounded-sm` / 2px)
+  2. **Rounded-Rectangular Buttons & Squircles** (`rounded-md` ~6px to `rounded-xl` ~12px)
+  3. **Circular & Pill / Capsule Buttons** (`rounded-full`: true 1:1 circles and elongated capsules)
+
+#### 1. Sharp Square & Rectangular Buttons (`rounded-none` or `rounded-sm`)
+
+- **Visual Character:** High-precision, architectural, utilitarian, industrial, austere, brutalist, grid-disciplined.
+- **When to Use:**
+  - **Developer Tools, Terminals, Code Editors & CLIs:** Git clients, terminal emulators, log analyzers, cloud telemetry consoles, debugger step controls, and monospaced command bars.
+  - **Data-Dense & Industrial Telemetry:** Financial order books (bid/ask trading buttons), Bloomberg-style terminals, CAD / 3D modeler viewports, audio DAWs (Ableton/Logic rack controls), aerospace flight telemetry, hardware instrument consoles.
+  - **Editorial, Brutalist & Luxury Architecture / Fashion Portfolios:** Swiss graphic design layouts, brutalist typographic experiments, avant-garde editorial publications, minimalist architecture portfolios where razor-sharp edges echo layout gridlines.
+  - **Utility Tool Palettes & Segmented Docks:** 1:1 aspect ratio square icon buttons (`w-9 h-9 aspect-square rounded-none` or `rounded-sm`) in tool ribbons (select, crop, pencil, erase), canvas snap toggles, or data table pagination grids (`[1] [2] [3]`).
+- **Design & Execution Rules:**
+  - Enforce crisp solid hairline borders (`border border-zinc-700` dark, `border-zinc-300` light).
+  - Typography: Monospace (`font-mono text-xs uppercase tracking-wider`) or crisp geometric sans (`font-medium tracking-tight text-sm`).
+  - Tactile Pressed States: Use mechanical inversion (swapping background and text colors on hover/active or 1px inset border displacement) rather than floaty blurry drop shadows:
+
+    ```html
+    <!-- Sharp Technical Action Button -->
+    <button
+      class="h-10 px-4 rounded-none bg-zinc-900 hover:bg-zinc-100 text-zinc-100 hover:text-zinc-900 border border-zinc-700 hover:border-zinc-100 font-mono text-xs uppercase tracking-wider transition-colors"
+    >
+      EXECUTE_BUILD
+    </button>
+
+    <!-- 1:1 Square Utility Tool Button -->
+    <button
+      class="w-10 h-10 aspect-square rounded-none bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-zinc-100 border border-zinc-800 flex items-center justify-center transition-colors"
+      aria-label="Toggle Grid Snapping"
+    >
+      <svg
+        class="w-4 h-4"
+        stroke="currentColor"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        ...
+      </svg>
+    </button>
+    ```
+
+#### 2. Rounded-Rectangular Buttons & Squircles (`rounded-md` to `rounded-xl`)
+
+- **Visual Character:** Balanced, ergonomic, professional, structured, reliable desktop software.
+- **When to Use:**
+  - **Enterprise B2B SaaS & Productivity Apps:** Project management (Linear, Notion), CRM, team collaboration, document suites, cloud management consoles.
+  - **Standard Data Entry Forms & Modal Actions:** Primary submit buttons ("Save Changes", "Create Organization", "Deploy Branch"), payment/checkout forms, dialog modal action footers (`Cancel` / `Confirm`).
+  - **Content Platforms & Developer Documentation:** Knowledge bases, reference docs, reading platforms where buttons need clear, expected affordance without distraction.
+- **Design & Execution Rules:**
+  - **Proportional Nesting:** Button radius must harmonize with adjacent inputs and parent containers ($r_{\text{input}} \approx r_{\text{button}} < r_{\text{card}}$). If cards use `rounded-xl` (12px), buttons should use `rounded-md` (6px) or `rounded-lg` (8px). Never put `rounded-2xl` buttons inside `rounded-md` cards.
+  - **Continuous Curvature (Squircles):** Favor continuous superellipse curves (`border-radius: 8px` with squircle smoothing) over harsh bubble fillets.
+  - **Never Use for Circular Metaphors:** Do not use rounded rectangles for media playback controls (Play/Pause) or floating utility actions:
+    ```html
+    <!-- Clean SaaS Action Button -->
+    <button
+      class="h-10 px-4 rounded-lg bg-zinc-100 hover:bg-white text-zinc-900 font-medium text-sm transition-colors"
+    >
+      Save Changes
+    </button>
+    ```
+
+#### 3. Circular Icon-Only Controls (Strict 1:1 Aspect Ratio — Absolute Ban on Text Pills)
+
+- **The Absolute Law of `rounded-full`:** The `rounded-full` utility is strictly and exclusively reserved for **1:1 square icon-only controls** that represent physical circular mechanisms (media player dials, floating tools, micro dismiss triggers).
+- **CRITICAL BAN: Text Buttons Must NEVER Be Styled as Pills/Capsules:**
+  - Never wrap text or labels in `rounded-full` (e.g., `rounded-full px-6 py-2.5`). Capsule pill buttons make applications look like cheap toy prototypes or unpolished templates.
+  - All text buttons (primary CTAs, secondary actions, form submit buttons, dialog footers) must be **sharp rectangular** (`rounded-none` / `rounded-sm`) or **refined squircles** (`rounded-md` / `rounded-lg`).
+  - **Filter Bars & Discipline Selectors:** NEVER use capsule pills (`.filter-pill`, `rounded-full`). Filter toggles must be built as sharp segmented control bars (`rounded-none border border-zinc-700 bg-zinc-900 text-zinc-300`), subtle squircles (`rounded-md`), or clean flat typographic underline tabs.
+- **The Only Legitimate Uses of `rounded-full`:**
+  - **Media Players & Audio/Video Controls:** Play/Pause primary triggers (`w-14 h-14 aspect-square rounded-full` containing only an SVG icon), track skip, volume toggle.
+  - **Floating Action Buttons (FAB) & Spatial Triggers:** Canvas zoom (`+` / `-`), pan controls, camera triggers (`w-12 h-12 aspect-square rounded-full`).
+  - **Micro Icon Triggers:** Modal dismiss `×` (`w-8 h-8 aspect-square rounded-full`), dark/light theme icon toggle, avatar profile popover button.
+  - **Ergonomics & Alignment:** Must strictly preserve equal width and height (`aspect-square`). Account for optical center-of-mass (e.g. nudge the triangular play icon `+1px` right so it centers visually).
+
+```html
+<!-- Media Player Primary Control (Permitted: 1:1 Icon-Only Circle) -->
+<button
+  class="w-14 h-14 aspect-square rounded-full bg-white hover:bg-zinc-200 text-black flex items-center justify-center transition-transform active:scale-95 shadow-md"
+  aria-label="Play Track"
+>
+  <svg class="w-6 h-6 translate-x-0.5" fill="currentColor" viewBox="0 0 24 24">
+    <polygon points="5 3 19 12 5 21 5 3"></polygon>
+  </svg>
+</button>
+
+<!-- Micro Icon Trigger (Permitted: 1:1 Icon-Only Circle) -->
+<button
+  class="w-8 h-8 aspect-square rounded-full bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100 border border-zinc-800 flex items-center justify-center transition-colors"
+  aria-label="Close dialog"
+>
+  <svg class="w-4 h-4" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+</button>
+
+<!-- Clean Category / Discipline Filter (BANNED: No Capsule Pills. USE: Sharp Segmented Control) -->
+<div class="inline-flex border border-zinc-800 bg-zinc-950 p-1">
+  <button
+    class="px-3.5 py-1.5 text-xs font-mono rounded-none bg-zinc-800 text-zinc-100 font-medium"
+  >
+    All (10)
+  </button>
+  <button
+    class="px-3.5 py-1.5 text-xs font-mono rounded-none text-zinc-400 hover:text-zinc-200"
+  >
+    Editorial
+  </button>
+  <button
+    class="px-3.5 py-1.5 text-xs font-mono rounded-none text-zinc-400 hover:text-zinc-200"
+  >
+    Technical
+  </button>
+</div>
+```
+
+#### Button Shape Decision Matrix
+
+| Interface Archetype & Context             | Chosen Geometry               | Tailwind Radius Token          | Aspect Ratio & Padding                        | When & Why                                                                                  |
+| :---------------------------------------- | :---------------------------- | :----------------------------- | :-------------------------------------------- | :------------------------------------------------------------------------------------------ |
+| **Developer Tools, CLIs & Terminals**     | Sharp Square / Rectangular    | `rounded-none` or `rounded-sm` | `px-4 py-2` (h-10) or `aspect-square w-9 h-9` | Echoes command-line grids, monospace aesthetics, and mechanical precision.                  |
+| **Industrial, CAD & Trading Desks**       | Sharp Square / Rectangular    | `rounded-none`                 | `px-3 py-1.5` (compact) or `w-8 h-8`          | Maximizes information density; prevents wasted margin space between dense action cells.     |
+| **Editorial, Architecture & Luxury**      | Sharp Rectangular             | `rounded-none`                 | `px-6 py-3` (stately)                         | Aligns with architectural grids, razor-sharp rules, and high-fashion typographic hierarchy. |
+| **B2B SaaS, CRM & Productivity**          | Rounded Rectangle / Squircle  | `rounded-md` or `rounded-lg`   | `px-4 py-2` to `px-5 py-2.5`                  | Balances ergonomic comfort with data density; harmonizes with form inputs and cards.        |
+| **Forms, Checkout & Dialog Actions**      | Rounded Rectangle / Squircle  | `rounded-md` to `rounded-lg`   | `px-4 py-2.5` (min-h-[40px])                  | Familiar, comfortable affordance for irreversible or committed transactional steps.         |
+| **Category Filters & Discipline Toggles** | Sharp Segmented or Squircle   | `rounded-none` or `rounded-md` | `px-3.5 py-1.5 text-xs`                       | Eliminates pill capsule clutter; maintains strict baseline grid alignment.                  |
+| **Media Player & Audio Controls**         | True 1:1 Circular (Icon-Only) | `rounded-full`                 | `aspect-square w-12 h-12` to `w-16 h-16`      | Natural physical metaphor for dials, speakers, record heads, and playback triggers.         |
+| **Canvas Tools & FAB Triggers**           | True 1:1 Circular (Icon-Only) | `rounded-full`                 | `aspect-square w-12 h-12` to `w-14 h-14`      | Distinguishes floating spatial layer from planar underlying canvas grid.                    |
+| **Micro Utility Triggers (Close, Theme)** | True 1:1 Circular (Icon-Only) | `rounded-full`                 | `aspect-square w-8 h-8` to `w-9 h-9`          | Compact, non-intrusive icon target with uniform radial hit area.                            |
+
+### Absolute Prohibition of Decorative Circular Dots, Capsule Pills, and Badge Proliferation
+
+- **The Problem ("Dot and Pill Flooding"):** AI models chronically rely on two cheap crutches to fake visual craft:
+  1. Compulsively slapping colored circular dots (`●`, `rounded-full`, `w-2 h-2`) next to brand logos, section kickers, table rows, and status words.
+  2. Wrapping every category, tag, and filter button in rounded capsule pills (`rounded-full px-3 py-1`).
+     Together, this turns clean software into a kindergarten playground cluttered with colored marbles and postage stamps.
+- **The Core Rule: ZERO Decorative Circular Dots & ZERO Capsule Pills. Rely 100% on Pure Typography.**
+- **Specific Strict Prohibitions:**
+  1. **NEVER Prefix Brands or Logos with a Circular Dot:** A brand name must never have a colored circular dot next to it (`<span class="brand-dot"></span> ANTI-SLOP`). Use typographic weight or a crisp geometric logo mark.
+  2. **NEVER Prefix Eyebrow Kickers or Subtitles with a Circular Dot:** Section kickers must never have a circular dot beside them (`<span class="hero-status-dot"></span> TEN COMPLETE BROWSER APPLICATIONS`). Present kickers with clean monospace or tracked-out sans typography alone.
+  3. **NEVER Wrap Filters in Capsule Pills:** Filter bars must never use `rounded-full` capsules (`.filter-pill`). Use sharp segmented buttons or flat typographic tabs.
+  4. **NEVER Add Decorative Status Dots to Static Text:** Words like "Active", "Production", or "Verified" must be styled with direct semantic text color (`text-emerald-400 font-medium text-xs`), NEVER with an adjacent colored circle.
 - **What to Use Instead:**
-  1. **Quiet Typography:** Muted tones (`text-zinc-400`, `text-zinc-500`), clean font weights (`font-medium`), or monospace (`font-mono text-xs`) without borders or background boxes.
-  2. **Inline Status Dot Indicators:** Pair a tiny solid 6px dot with clean text instead of boxing the word:
+  1. **Quiet Typography & Direct Semantic Colors:** Color the text directly without borders, capsules, or dots:
 
      ```html
-     <!-- AI Slop: Boxed status pill or square badge on every noun -->
-     <span
-       class="rounded-full px-2.5 py-0.5 text-xs bg-emerald-950 border border-emerald-800 text-emerald-400"
-       >Active</span
-     >
-     <span
-       class="rounded px-2 py-0.5 text-xs bg-zinc-800 border border-zinc-700 text-zinc-300"
-       >Production</span
-     >
+     <!-- BANNED AI SLOP: Circular dot next to brand -->
+     <a class="brand-link">
+       <span class="brand-dot"></span>
+       <!-- BANNED -->
+       <span>ANTI-SLOP</span>
+     </a>
 
-     <!-- Clean High-Craft: Inline status dot and quiet typography -->
-     <span class="inline-flex items-center gap-1.5 text-xs text-zinc-300">
-       <span
-         class="w-1.5 h-1.5 rounded-full bg-emerald-500"
-         aria-hidden="true"
-       ></span>
-       Active
-     </span>
-     <span class="text-xs font-mono text-zinc-400">production</span>
-     ```
+     <!-- CLEAN HIGH-CRAFT: Pure confident typography -->
+     <a class="brand-link font-mono font-bold tracking-wider text-zinc-100">
+       ANTI-SLOP <span class="text-zinc-500 font-normal">· CRAFT LAB</span>
+     </a>
 
-  3. **Typographic Delimiters Over "Chip Clouds":** Separate metadata attributes with middots (`·`), slashes (`/`), or simple spacing (`gap-3`) instead of turning each into an individual boxed chip:
-
-     ```html
-     <!-- AI Slop: Mosaic of square/pill badges (chip fatigue) -->
-     <div class="flex gap-2">
-       <span class="badge">v2.4.0</span>
-       <span class="badge">us-east-1</span>
-       <span class="badge">PostgreSQL</span>
-       <span class="badge">Production</span>
+     <!-- BANNED AI SLOP: Status dot next to hero kicker -->
+     <div class="kicker">
+       <span class="hero-status-dot"></span>
+       <!-- BANNED -->
+       <span>TEN COMPLETE BROWSER APPLICATIONS</span>
      </div>
 
-     <!-- Clean High-Craft: Elegant typographic metadata line -->
+     <!-- CLEAN HIGH-CRAFT: Clean uppercase tracked kicker -->
+     <div
+       class="kicker text-xs font-mono tracking-widest text-zinc-400 uppercase"
+     >
+       TEN COMPLETE BROWSER APPLICATIONS · ZERO DEPENDENCIES
+     </div>
+
+     <!-- BANNED AI SLOP: Decorative dot + capsule badge for status -->
+     <div class="badge rounded-full bg-emerald-950 border border-emerald-800">
+       <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Active
+     </div>
+
+     <!-- CLEAN HIGH-CRAFT: Direct semantic text color -->
+     <span class="text-xs font-mono font-medium text-emerald-400">active</span>
+     ```
+
+  2. **Typographic Delimiters Over "Chip Clouds":** Separate metadata attributes with middots (`·`), slashes (`/`), or simple spacing (`gap-3`) instead of turning each into an individual boxed chip:
+     ```html
+     <!-- Clean High-Craft: Typographic metadata line -->
      <div class="flex items-center gap-2 text-xs text-zinc-400 font-mono">
        <span>v2.4.0</span><span class="text-zinc-600">·</span>
        <span>us-east-1</span><span class="text-zinc-600">·</span>
        <span>PostgreSQL</span><span class="text-zinc-600">·</span>
-       <span class="text-zinc-300">production</span>
+       <span class="text-zinc-300 font-medium">production</span>
      </div>
      ```
 
-  4. **Direct Semantic Text Colors:** Color the text directly (`text-rose-400`, `text-amber-400`, `text-zinc-500`) instead of boxing it into a colored card or capsule.
-
-- **Ban Gratuitous Top-Bar Status Pills (`• Ready`, `• Online`, `• Connected`):** Never place persistent status pills in headers or navbars. A functioning app does not need to advertise that it is "Ready". Reserve indicators for active background tasks (spinner for "Syncing...") or actual errors.
-- **Ban High-Drama Translucent Badges (`ATTENTION`, `WARNING`, `CRITICAL`):** Never slap loud all-caps badges with glowing translucent fills (`bg-amber-500/10 text-amber-400 border-amber-500/30`) onto cards. Present status through calm, clean metrics and typography (`14 open issues`, `3 failed jobs`, `8 pending reviews`).
-- **Legitimate Exceptions ("When Badges ARE Needed"):**
-  - **Interactive Dismissible / Filter Chips:** When a tag is an interactive control that users can click to filter, toggle, or dismiss via an `×` button.
-  - **Numeric Notification / Unread Counts:** Compact counters attached to tabs or navigation (e.g., `Inbox (4)`, `Issues [12]`).
-  - **Solitary Critical Telemetry in Monospace Logs:** A single critical state in dense build logs (e.g., `FAILED` in CI/CD).
-  - **Strict Solid Neutrals When Permitted:** Legitimate badges must use **100% solid, opaque backgrounds** (`bg-zinc-800 text-zinc-300 border border-zinc-700`), never translucent tinted glass (`bg-blue-500/20`).
+- **Ban Gratuitous Top-Bar Status Pills (`• Ready`, `• Online`, `• Connected`):** Never place persistent status pills or dots in headers or navbars.
+- **Ban Fake OS Window Traffic-Light Dots:** Never place three colored circles (red/yellow/green) on card frames or screenshot mockups.
+- **Strict Neutrals for Rare Legitimate Interactive Tags:** If an interactive tag has a remove `×` button, it must use **100% solid, opaque neutral rectangles** (`rounded-none` or `rounded-md bg-zinc-800 text-zinc-300 border border-zinc-700`), NEVER capsule pills (`rounded-full`).
 - **Token Separation:** Keep dynamic operational states strictly separated from static technical specifications (e.g., never mix live connection state like `Online` into technical specification tags like format, protocol, or version).
 
 ---
@@ -445,7 +611,7 @@ Guide the design and implementation of modern, high-craft web interfaces. Elimin
 
 - Main root page title is strictly the brand name (`<title>Name</title>`). Sub-pages append only functional context: `Name Login`, `Name Register`, `Name Files`, `Name Settings`, `Name Dashboard`.
 - Avoid buzzword mad-libs ("Supercharge your workflow", "Empower your scale").
-- **Ban Floating Hero Announcement Pills, Header Badges & Decorative Kicker Bullets:** Never place a floating pill badge, square category chip (`[ ✨ WHAT'S NEW ]`, `[ OVERVIEW ]`, `[ v2.0 RELEASE ]`), or pseudo-status bullet (`● Issue No. 44 · Autumn 2026`) directly above the `<h1>` or section title. Let confident typography lead the page.
+- **Ban Floating Hero Announcement Pills, Header Badges & Decorative Kicker Dots:** Never place a floating pill badge, square category chip (`[ ✨ WHAT'S NEW ]`, `[ OVERVIEW ]`, `[ v2.0 RELEASE ]`), circular dot (`<span class="hero-status-dot"></span>`, `<span class="brand-dot"></span>`, `●`), or pseudo-status marker anywhere near the brand logo, navigation links, eyebrow kicker, or `<h1>`. Let confident typography lead the page.
 - State product/tool function plainly in sentence 1. Display realistic UI artifacts (syntax-highlighted code, real tables, accurate keyboard shortcuts).
 
 ### Mandatory Head Metadata: Favicons, Apple Touch Icon & Open Graph Tags
@@ -697,9 +863,12 @@ Weights: **Strong ($w = 3$)**, **Medium ($w = 2$)**, **Weak ($w = 1$)**.
 #### D. Components & Iconography (Tells 31–38)
 
 31. **Stock shadcn/ui Neutral Look ($w = 1$):** Default zinc/slate Radix primitives with unmodified `--radius: 0.5rem` and 2px ring focus.
+    31a. **Monotonous Rectangle Button Monoculture ($w = 1$):** Mindlessly applying identical medium-rounded rectangular buttons (`rounded-md`/`rounded-lg`) across every screen and every website archetype, ignoring sharp square precision for devtools/dense data and circular/pill ergonomics for media/consumer contexts.
 32. **Tinted Rounded Square Icons ($w = 2$):** Lucide outline icon in `bg-indigo-100 text-indigo-600 p-3 rounded-lg` matching generic keywords (Zap, Shield, Rocket).
 33. **Pill Badge Above Headline ($w = 2$):** `rounded-full border px-3 py-1 text-sm` ("✨ New: v2.0 Released") with pulsing `animate-ping` dot.
     33a. **Faux-Telemetry & Space-Hogging Clutter Badges ($w = 2$):** Bordered monospaced tags (`[FACILITY HLL-04]`, `[GRID SYNC 50.02 HZ]`, `[SYS-01]`) and non-interactive status pills crowding headers and card crowns to fake technical complexity.
+    33b. **Decorative Circular Dot Slop ($w = 3$):** Slapping 6px–8px circular dots (green, blue, amber, or pulsing) next to brand marks (`brand-dot`), hero kickers (`hero-status-dot`), eyebrow micro-labels, or static metadata.
+    33c. **Capsule Pill Monoculture on Text & Filters ($w = 3$):** Wrapping filter buttons (`filter-pill`), category selectors, or text CTAs in `rounded-full` capsule pills instead of sharp segmented bars or squircles.
 34. **Two-Button Hero ($w = 1$):** Equal-weight primary gradient button ("Get Started") + secondary outline button ("Learn More" / "Watch Demo").
 35. **Nudging Arrow Glyphs on Every CTA ($w = 1$):** "Get Started $\to$" with `group-hover:translate-x-1`.
 36. **Green Checkmark Lists ($w = 1$):** Lucide Check in emerald circle for every bullet, ending in "Everything in Pro, plus".
@@ -711,6 +880,7 @@ Weights: **Strong ($w = 3$)**, **Medium ($w = 2$)**, **Weak ($w = 1$)**.
 39. **Staged Stock Photography ($w = 1$):** Unsplash photos of smiling laptop workers or skyline at dusk in `rounded-xl object-cover`.
 40. **Fake 3D Tilted Browser Mockups ($w = 3$):** Browser frame with 3 traffic-light dots (`#FF5F57`, `#FEBC2E`, `#28C840`), lorem lines, and 3D tilt `rotateX`.
 41. **Abstract Hero Art ($w = 1$):** Heavy 3D glass spheres, mesh gradients, floating cubes, and synthetic particle waves.
+    41a. **Sterile Void Hero ($w = 2$):** A hero section devoid of decorative background imagery, textures, or atmospheric depth, stranding headlines against an empty, untextured flat canvas void.
 42. **AI-Generated Image Artifacts ($w = 1$):** Warped text in illustrations, plastic skin, garbled dashboard widgets.
 43. **Placeholder Avatars ($w = 1$):** pravatar.cc, DiceBear, or UI Faces at 40–48px circles.
 44. **Hotlinked Placeholder Assets ($w = 1$):** via.placeholder.com, picsum.photos, gray `bg-gray-200` rectangles.
@@ -879,9 +1049,41 @@ Visitors judge relevance and decide whether to bounce in under 3 seconds. The ab
   - Never use vague corporate buzzwords ("Elevate", "Supercharge", "Unleash", "Next-gen").
   - Lead with the specific, falsifiable outcome: incorporate real metrics, timeframes, or explicit pain relief (e.g., _"Automate client invoicing in 30 seconds and get paid 2x faster"_).
   - Use `text-wrap: balance` to eliminate awkward line breaks and orphan words.
+- **Mandatory Decorative Hero Background Image (Hardcoded Requirement):**
+  - The hero section must include an atmospheric decorative background image layered beneath the headline and CTA to eradicate sterile empty voids.
+  - Pattern:
+
+    ```html
+    <section
+      class="relative min-h-[85vh] flex items-center justify-center overflow-hidden border-b border-zinc-800"
+    >
+      <!-- Mandatory Atmospheric Background Image -->
+      <img
+        src="/images/hero-bg.webp"
+        alt=""
+        aria-hidden="true"
+        fetchpriority="high"
+        class="absolute inset-0 w-full h-full object-cover object-center opacity-30 select-none pointer-events-none -z-10"
+      />
+      <!-- Gradient Vignette for Text Contrast Protection -->
+      <div
+        class="absolute inset-0 bg-gradient-to-b from-zinc-950/30 via-zinc-950/75 to-zinc-950 -z-10"
+        aria-hidden="true"
+      ></div>
+
+      <div class="relative z-10 max-w-5xl mx-auto px-6 py-24 text-center">
+        <!-- Headline, lead copy, CTA -->
+      </div>
+    </section>
+    ```
+
 - **The Primary CTA (High-Contrast Anchor):**
   - Must be clearly visible above the fold on both desktop and mobile viewports.
   - Use the single solid accent color of the page to guarantee highest optical contrast against the canvas.
+  - **Intentional Button Geometry (Never Default to Generic Rectangles or Capsule Pills):**
+    - **Developer Tools, Infrastructure, Security & CLI Tools:** Sharp rectangular (`rounded-none` or `rounded-sm`) with monospace or crisp bold typography to convey technical precision.
+    - **B2B SaaS, Analytics, Workspaces & Enterprise Platforms:** Soft rounded-rectangle / squircle (`rounded-md` or `rounded-lg`) nested proportionally with form inputs and card radii.
+    - **Consumer Products, Creative, Media & Hardware:** Refined squircle (`rounded-lg` or `rounded-xl` with continuous curvature) with comfortable touch targets. Text CTAs must NEVER be styled as capsule pills (`rounded-full`).
   - Action-oriented button copy with concrete payoff: replace passive commands like _"Submit"_ or _"Get Started"_ with low-friction commitments:
     - _"Start 14-day free trial"_
     - _"Download the free CLI"_
@@ -896,10 +1098,13 @@ Visitors judge relevance and decide whether to bounce in under 3 seconds. The ab
 
 ### 12.3 Complete Imagery & Visual Asset Standards
 
-Images on a landing page serve one primary job: **reducing cognitive load and proving claims visually.** Never treat images as cosmetic filler.
+Images on a landing page serve two primary jobs: **grounding the page with rich atmospheric depth** and **proving claims visually.** Never leave the hero as a barren, flat text void.
 
-#### The Golden Rule: Proof Over Decoration
+#### Proof & Atmospheric Depth Over Generic AI Clichés
 
+- **Banning Generic Slop Does NOT Mean Banning Imagery:**
+  - Rejecting generic corporate stock photos (smiling laptop workers) and floating 3D pastel clay spheres does **NOT** mean stripping the site down to naked text against an empty dark void.
+  - High-craft interfaces mandate **rich, authentic decorative background imagery** in the hero—such as brutalist architectural photography, precision hardware blueprints, dark geological textures, mechanical movements, or atmospheric plates.
 - **Absolute Prohibition of Staged Stock Photography:** Never use Unsplash/Getty photos of smiling office workers shaking hands, staring at laptops, or pointing at whiteboards. They trigger instant banner blindness and degrade perceived credibility.
 - **Absolute Prohibition of Generic 3D "AI Slop" & Shapes:** Never use floating pastel clay spheres, isometric purple blobs, synthetic particle ribbons, or generic Corporate Memphis illustrations. They communicate zero functional information about the product.
 - **Mandatory Real Product Imagery (Context of Use):**
